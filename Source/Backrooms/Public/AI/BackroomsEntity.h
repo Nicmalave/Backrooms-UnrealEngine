@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/Actor.h"
 #include "BackroomsEntity.generated.h"
 
 class ABackroomsPlayerCharacter;
-class UBehaviorTree;
-class UBlackboardComponent;
+class USkeletalMeshComponent;
+class UAnimInstance;
 
 UENUM(BlueprintType)
 enum class EEntityType : uint8
@@ -24,8 +24,29 @@ enum class EEntityState : uint8
     ES_Chase UMETA(DisplayName = "Chase")
 };
 
+USTRUCT(BlueprintType)
+struct FEntityStats
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float WalkSpeed = 600.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float ChaseSpeed = 1500.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float SenseRadius = 2000.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float VisibilityThreshold = 1.1f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
+    float HeightOffset = 0.0f;
+};
+
 UCLASS()
-class BACKROOMS_API ABackroomsEntity : public ACharacter
+class BACKROOMS_API ABackroomsEntity : public APawn
 {
     GENERATED_BODY()
 
@@ -41,18 +62,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
     EEntityState CurrentState = EEntityState::ES_Wander;
 
-    // Behavior parameters
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float WalkSpeed = 600.0f;
+    FEntityStats EntityStats;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float ChaseSpeed = 1500.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float SenseRadius = 2000.0f;
-
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-    float VisibilityThreshold = 1.1f;
+    UFUNCTION(BlueprintCallable, Category = "AI")
+    void DetectPlayer(ABackroomsPlayerCharacter* Player);
 
     UFUNCTION(BlueprintCallable, Category = "AI")
     void ChasePlayer(ABackroomsPlayerCharacter* Player);
@@ -60,11 +74,23 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AI")
     void WanderAround();
 
+    UFUNCTION(BlueprintCallable, Category = "AI")
+    bool CanSeePlayer(ABackroomsPlayerCharacter* Player) const;
+
 private:
     UPROPERTY()
     ABackroomsPlayerCharacter* TargetPlayer;
 
-    FVector WanderTarget;
+    UPROPERTY()
+    USkeletalMeshComponent* SkeletalMesh;
+
+    FVector WanderTarget = FVector::ZeroVector;
     float AlertTimer = 0.0f;
+    float TeleportCooldown = 0.0f;
     bool bCanSeePlayer = false;
+
+    // Detection logic per entity type
+    void UpdateWretchBehavior(float DeltaTime);
+    void UpdateHoundBehavior(float DeltaTime);
+    void UpdateSmilerBehavior(float DeltaTime);
 };

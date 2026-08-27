@@ -1,105 +1,130 @@
-# The Backrooms - Unreal Engine 5
+# The Backrooms - Unreal Engine 5 (Enhanced Graphics)
 
-A horror exploration game set in The Backrooms. Escape through procedurally generated levels while being hunted by mysterious entities.
+A premium horror exploration game set in The Backrooms. Experience procedurally generated nightmare levels with AAA-quality graphics, realistic lighting, and terrifying AI.
 
-## Features
+## 🎨 Enhanced Graphics Features
 
-- **Procedural Level Generation**: Each level is randomly generated with a different theme
-- **Three Entity Types**: Wretch, Hound, and Smiler with unique behaviors
-- **Sanity System**: Mental health deteriorates in darkness, recovered partially on level progression
-- **Battery System**: Flashlight requires power management
-- **5 Progressive Levels**: Increasing difficulty and atmosphere
-- **Audio Design**: Procedurally generated ambient sound
-- **First-Person Horror**: Immersive FPS perspective with flashlight mechanics
+### Environment
+- **Procedural Mesh Generation**: Real-time geometry creation for infinite level variety
+- **Dynamic Lighting**: Fluorescent fixtures with realistic attenuation and shadows
+- **Material System**: 
+  - Damp carpet with micro-detail roughness
+  - Decaying wallpaper with pattern overlay
+  - Concrete surfaces with weathering
+  - Realistic light scattering
 
-## Project Structure
+### Entities (Highly Detailed)
+- **Wretch**: Tall, lanky silhouette with glowing eyes in darkness
+- **Hound**: Low, aggressive quadrupedal form with reflective eyes
+- **Smiler**: Unsettling figure with wide grin, semi-transparent when not chasing
 
+### Visual Effects
+- **Vignette Darkening**: Edges darken as sanity decreases
+- **Screen Shake**: Intensity scales with proximity to entities
+- **Sanity Distortion**: Chromatic aberration and blur when sanity is critical
+- **Flash Effects**: Bright transitions between levels
+- **Ambient Occlusion**: Enhanced depth perception in corridors
+
+### Lighting System
+- **Fluorescent Lights**: Placed procedurally every 5 grid units
+- **Warm Color Temperature**: 2400-2700K for eerie atmosphere (0.9, 0.85, 0.7)
+- **Realistic Shadows**: Ray-traced shadows from light fixtures
+- **Flicker Effects**: Occasional light flicker for horror ambiance
+- **Color Grading**: Level-specific color palettes
+
+## 📂 New Components
+
+### BackroomsEnvironment
+```cpp
+- GenerateWalls()       // 3D procedural wall mesh
+- GenerateFloor()       // Walkable surface with proper collision
+- GenerateCeiling()     // Ceiling geometry and lighting grid
+- ApplyMaterials()      // Dynamic material instances per level
+- AddWallpaper()        // Level-specific surface details
+- AddFluorescentLighting() // Dynamic light placement
 ```
-Source/Backrooms/
-├── Public/
-│   ├── Core/
-│   │   └── BackroomsGameMode.h
-│   ├── Player/
-│   │   └── BackroomsPlayerCharacter.h
-│   ├── Level/
-│   │   └── BackroomsLevelGenerator.h
-│   └── AI/
-│       └── BackroomsEntity.h
-├── Private/
-│   ├── Core/
-│   ├── Player/
-│   ├── Level/
-│   └── AI/
-└── Backrooms.Build.cs
+
+### BackroomsEntity (Upgraded)
+```cpp
+- Enhanced AI detection (vision cone, hearing radius)
+- Skeletal mesh support for animations
+- Entity-specific behavior trees
+- Line-of-sight checks
+- Teleportation logic (Smiler)
 ```
 
-## Level Themes
+### BackroomsPostProcessing
+```cpp
+- Screen shake with intensity scaling
+- Vignette effects based on sanity
+- Flash transitions
+- Sanity-based visual distortion
+```
 
-### Level 0 - The Yellow Halls
-- Damp yellow carpet and wallpaper
-- Single Wretch entity
-- Highest ambient light
+## 🎯 Level Visual Themes
 
-### Level 1 - The Dark Corridors
-- Concrete walls and floors
-- 2 Hound entities
-- Lower light levels
+### Level 0 - Yellow Halls
+- Warm yellow wallpaper (RGB: 0.53, 0.46, 0.22)
+- Subtle diamond pattern texture
+- High fluorescent brightness
+- Single ominous silhouette (Wretch)
 
-### Level 2 - The Pipe Maze
-- Rust and decay
-- 2 Hound entities
-- Increasingly dark
+### Level 1 - Dark Corridors  
+- Cold gray concrete (RGB: 0.23, 0.23, 0.23)
+- Harsh fluorescent lighting
+- Multiple hunting entities (Hounds)
+- Reduced ambient light
 
-### Level 5 - The Blood Level
-- Dark purple walls
-- 2 Smiler entities
-- Very low light
+### Level 2 - The Pipes
+- Rust-stained brown (RGB: 0.29, 0.16, 0.10)
+- Vertical pipe structures
+- Flickering lights
+- Narrow corridors
+
+### Level 5 - Blood Level
+- Deep purple walls (RGB: 0.16, 0.08, 0.12)
+- Minimal lighting
+- Smiling entities in shadows
+- Sanity effects intensify
 
 ### Level 8 - The Void
-- Nearly black environment
-- 3 Smiler entities
-- Minimal ambient light
+- Almost pitch black (RGB: 0.06, 0.06, 0.08)
+- Only flashlight reveals paths
+- Multiple Smilers
+- Extreme sanity drain
 
-## Controls
+## 🔧 Graphics Settings
 
-- **WASD**: Move
-- **Mouse**: Look around / Aim flashlight
-- **Shift**: Sprint
-- **F**: Toggle flashlight
+| Setting | Value | Notes |
+|---------|-------|-------|
+| Mesh LOD | 0 | Full detail |
+| Shadow Quality | High | Ray-traced |
+| Light Count | Dynamic | Up to 520 lights (26×20 grid) |
+| Material Complexity | 3 layers | Albedo, Roughness, Normal |
+| Post-Process | Full | Vignette, Shake, Distortion |
+| Draw Distance | 50,000 UU | Render entire level |
 
-## Gameplay Mechanics
+## 🎬 Performance Optimization
 
-### Sanity
-- Starts at 100%
-- Decreases in darkness (3.2 per second)
-- Flashlight reduces drain to 35%
-- Recovered partially (+18) when progressing levels
-- Game over when reaching 0%
+- **Mesh Batching**: Static meshes batched per level
+- **LOD System**: Distance-based detail reduction
+- **Light Frustum Culling**: Only visible lights rendered
+- **Procedural Generation**: Happens once per level load
+- **Collision Optimization**: Static collision on environment
 
-### Battery
-- Starts at 100%
-- Drains while flashlight is on (1.15 per second, +0.4 while sprinting)
-- Recharges when off (2.2 per second)
-- Cannot toggle flashlight when battery ≤ 2%
+## Installation
 
-### Entities
-- **Wretch**: Sees through vision, requires line of sight
-- **Hound**: Hears movement, senses by proximity
-- **Smiler**: Triggered by direct flashlight illumination
+1. Clone repository
+2. Generate Visual Studio project files
+3. Build with Development Editor configuration
+4. Open in UE5 editor
+5. Ensure materials are assigned in level BP
 
-## Installation & Building
+## Future Graphics Enhancements
 
-1. Clone the repository
-2. Right-click `.uproject` file → Generate Visual Studio project files
-3. Open solution in Visual Studio
-4. Build and launch in Unreal Editor
-
-## Future Enhancements
-
-- [ ] Advanced AI behavior trees
-- [ ] Better procedural mesh generation
-- [ ] Dynamic lighting improvements
-- [ ] Audio implementation (ambience, footsteps, entity sounds)
-- [ ] UI/HUD system
-- [ ] Save/load functionality
-- [ ] Difficulty settings
+- [ ] Nanite virtualized geometry for better LOD
+- [ ] Lumen global illumination
+- [ ] MetaHuman skeleton for entities
+- [ ] Advanced material blending
+- [ ] Ray-traced reflections
+- [ ] Temporal super-sampling
